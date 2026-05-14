@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LL(1) Analyzer</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <div class="header">
+        <h1>
+          LL(1) Analyzer
+          <span
+            id="ll1-badge"
+            class="is-ll1-badge"
+            style="display: none"
+          ></span>
+        </h1>
+        <p>输入文法，计算 FIRST / FOLLOW / 预测表，验证输入串</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">文法规则</div>
+        <textarea
+          id="grammar-input"
+          rows="7"
+          placeholder="E -> T E'
+E' -> + T E' | ε
+T -> F T'
+T' -> * F T' | ε
+F -> ( E ) | i"
+        ></textarea>
+        <div class="hint">
+          每行一条规则，用 | 分隔多个候选式，ε 表示空产生式
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="primary" onclick="analyze()">分析文法</button>
+        <button onclick="loadExample()">加载示例</button>
+        <button onclick="clearAll()">清空</button>
+      </div>
+
+      <div id="error-msg" class="error-msg" style="display: none"></div>
+
+      <hr class="divider" />
+
+      <div class="output-section" id="output">
+        <div class="tab-bar">
+          <button class="tab active" onclick="switchTab('first')">FIRST</button>
+          <button class="tab" onclick="switchTab('follow')">FOLLOW</button>
+          <button class="tab" onclick="switchTab('table')">预测分析表</button>
+          <button class="tab" onclick="switchTab('trace')">分析过程</button>
+        </div>
+
+        <div id="tab-first" class="tab-content active">
+          <div id="first-grid" class="set-grid"></div>
+        </div>
+
+        <div id="tab-follow" class="tab-content">
+          <div id="follow-grid" class="set-grid"></div>
+        </div>
+
+        <div id="tab-table" class="tab-content">
+          <div class="table-wrap">
+            <table id="parse-table"></table>
+          </div>
+        </div>
+
+        <div id="tab-trace" class="tab-content">
+          <div class="section" style="margin-bottom: 1rem">
+            <div class="section-label">输入串（终结符用空格分隔）</div>
+            <div class="trace-input-row">
+              <input
+                type="text"
+                id="input-string"
+                placeholder="id + id * id $"
+              />
+              <button onclick="runTrace()">运行</button>
+            </div>
+            <div class="hint">末尾加 $ 表示输入结束符</div>
+          </div>
+          <div id="trace-result"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="analyzer.js"></script>
+  </body>
+</html>
